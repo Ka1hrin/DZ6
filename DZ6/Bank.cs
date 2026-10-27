@@ -29,6 +29,8 @@ namespace DZ6
 
             if (value > _balance)
                 throw new ArgumentException("На счете недостаточно средств");
+            if (value <= 0)
+                throw new ArgumentException("Сумма пополнения не может быть отрицательной");
             _balance -= value;
             return _balance;
 
@@ -47,7 +49,7 @@ namespace DZ6
         {
             _bankNumber = BankId();
             _balance = balance;
-            _account = account;
+            Account = account;
         }
         public void PrintInfo()
         {

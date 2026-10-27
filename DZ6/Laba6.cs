@@ -6,10 +6,13 @@ namespace DZ6
     {
         static void Main()
         {
-            Task7();
+            Task();
+            Homework();
         }
-        private static void Task7()
+        private static void Task()
         {
+            Console.WriteLine("Упражнение 7");
+
             BankAccount account = new BankAccount(78654568m, TypesOfAccount.Savings);
             account.PrintInfo();
             account.Deposit(366472);
@@ -19,10 +22,10 @@ namespace DZ6
 
         }
 
-
-
-
-
-
+        private static void Homework()
+        {
+            House house = new House(828, 163, 900, 10);
+            house.PrintInfo();
+        }
     }
 }
