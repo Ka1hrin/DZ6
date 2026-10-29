@@ -22,13 +22,13 @@ namespace PDF6
             Electronics vinyl = new Electronics("Виниловый проигрыватель", "Неизвестно");
             Electronics brokenTv = new Electronics("Телевизор", "Петров Петр", Status.Pledged, "Samsung", 2020, 30000m, Condition.Broken, false);
 
-            pawnshop.AcceptItem(phone);
-            pawnshop.AcceptItem(laptop);
-            pawnshop.AcceptItem(iphone);
-            pawnshop.AcceptItem(ring);
-            pawnshop.AcceptItem(earrings);
-            pawnshop.AcceptItem(vinyl);
-            pawnshop.AcceptItem(brokenTv);
+            pawnshop.TryAcceptItem(phone);
+            pawnshop.TryAcceptItem(laptop);
+            pawnshop.TryAcceptItem(iphone);
+            pawnshop.TryAcceptItem(ring);
+            pawnshop.TryAcceptItem(earrings);
+            pawnshop.TryAcceptItem(vinyl);
+            pawnshop.TryAcceptItem(brokenTv);
 
             pawnshop.PrintBalance();
             pawnshop.AddCash(100000m);

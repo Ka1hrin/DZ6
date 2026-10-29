@@ -127,6 +127,21 @@ namespace PDF6
         }
 
         /// <summary>
+        /// Метод принимает предмет в ломбард и сообщает об ошибке, не останавливая программу
+        /// </summary>
+        public void TryAcceptItem(Goods item)
+        {
+            try
+            {
+                AcceptItem(item);
+            }
+            catch (ArgumentException ex)
+            {
+                Console.WriteLine($"Ошибка: {ex.Message}");
+            }
+        }
+
+        /// <summary>
         /// Метод, который продает просроченный по сроку предмет
         /// </summary>
         public void BuyItem(Goods item)
