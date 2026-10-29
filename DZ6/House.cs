@@ -4,12 +4,12 @@
     {
         private static int _houseNumber = 0;
         private int _buildNumber;
-        private short _height;        //Самое высокое здание 828 м
+        private int _height;        //Самое высокое здание 828 м
         private byte _floors;       //Наибольшее количество этажей 163
-        private short _flats;
+        private int _flats;
         private byte _entrances;
         
-        public House(short height, byte floors, short flats, byte entrances)
+        public House(int height, byte floors, int flats, byte entrances)
         {
             _buildNumber = ++_houseNumber;
 
@@ -19,7 +19,7 @@
             Entrances = entrances;
         }
 
-        public short Height
+        public int Height
         {
             get { return _height; }
             set
@@ -41,7 +41,7 @@
             }
         }
 
-        public short Flats
+        public int Flats
         {
             get { return _flats; }
             set

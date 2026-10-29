@@ -1,3 +1,5 @@
 <Solution>
   <Project Path="DZ6/DZ6.csproj" />
+  <Project Path="Helper/Bibliotek.csproj" Id="26523ad3-c3ff-491a-b78d-c6396a757626" />
+  <Project Path="PDF6/PDF6.csproj" Id="9d6c0259-8f19-4948-9571-759a7791091d" />
 </Solution>

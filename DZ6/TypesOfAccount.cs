@@ -1,4 +1,7 @@
-﻿public enum TypesOfAccount
+﻿namespace DZ6
 {
-    Current, Savings
+    public enum TypesOfAccount
+    {
+        Current, Savings
+    }
 }

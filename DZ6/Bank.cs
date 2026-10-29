@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Bibliotek;
+using System;
 
 namespace DZ6
 {
@@ -30,7 +31,7 @@ namespace DZ6
             if (value > _balance)
                 throw new ArgumentException("На счете недостаточно средств");
             if (value <= 0)
-                throw new ArgumentException("Сумма пополнения не может быть отрицательной");
+                throw new ArgumentException("Сумма снятия не может быть отрицательной");
             _balance -= value;
             return _balance;
 
@@ -53,7 +54,7 @@ namespace DZ6
         }
         public void PrintInfo()
         {
-            Console.WriteLine($"Номер счета: {_bankNumber}, тип счета: {_account}, баланс: {_balance}\n");
+            Console.WriteLine($"Номер счета: {_bankNumber}, тип счета: {BankHelp.EnumName(_account)}, баланс: {_balance}\n");
         }
     }
 }

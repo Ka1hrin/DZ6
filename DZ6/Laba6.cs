@@ -1,10 +1,11 @@
 ﻿using System;
+using Bibliotek;
 
 namespace DZ6
 {
     class Laba6
     {
-        static void Main()
+        private static void Main()
         {
             Task();
             Homework();
@@ -13,18 +14,36 @@ namespace DZ6
         {
             Console.WriteLine("Упражнение 7");
 
-            BankAccount account = new BankAccount(78654568m, TypesOfAccount.Savings);
+            decimal value = Helper.ReadDecimal("Введите баланс: ");
+            Console.Write("Введите тип счета:");
+            string typesOfAccount = Console.ReadLine();
+            if(string.IsNullOrWhiteSpace(typesOfAccount))
+                throw new ArgumentException("Строка не может быть пустой!");
+            if (!Enum.TryParse(typesOfAccount, true, out TypesOfAccount type))
+                throw new ArgumentException("Вы ввели некорректный тип счета!");
+
+
+            BankAccount account = new BankAccount(value, type);
             account.PrintInfo();
-            account.Deposit(366472);
+
+            int deposit = Helper.ReadInt("Введите сумму пополнения: ");
+            account.Deposit(deposit);
             account.PrintInfo();
-            account.Withdraw(37289);
+
+            int withdraw = Helper.ReadInt("Введите сумму, которую хотите снять: ");
+            account.Withdraw(withdraw);
             account.PrintInfo();
 
         }
 
         private static void Homework()
         {
-            House house = new House(828, 163, 900, 10);
+            int height = Helper.ReadInt("Введите высоту здания: ");
+            byte floors = Helper.ReadBytes("Введите количество этажей: ");
+            int flats = Helper.ReadInt("Введите количество квартир: ");
+            byte entrances = Helper.ReadBytes("Введите количество подъездов: ");
+
+            House house = new House(height, floors, flats, entrances);
             house.PrintInfo();
         }
     }
