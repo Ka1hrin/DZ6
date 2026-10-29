@@ -13,6 +13,9 @@ namespace PDF6
         private decimal _balance;
         private decimal _commissionRate;
 
+        /// <summary>
+        /// Конструктор ломбарда
+        /// </summary>
         public Pawnshop(string name, string address, string phoneNumber, List<Goods> goods, decimal balance, decimal commissionRate)
         {
             Name = name;
@@ -110,6 +113,9 @@ namespace PDF6
             if (item == null)
                 throw new ArgumentException("Нельзя принять несуществующий предмет!");
 
+            if (item is Electronics electronics && electronics.IsBroken())
+                throw new ArgumentException("Сломанную технику не принимаем!");
+            
             if (Balance - item.CalculateCredit() < 0)
                 throw new ArgumentException("Извините, в ломбарде нет столько наличных(");
 
@@ -120,8 +126,14 @@ namespace PDF6
 
         }
 
+        /// <summary>
+        /// Метод, который продает просроченный по сроку предмет
+        /// </summary>
         public void BuyItem(Goods item)
         {
+            if (!item.IsExpired())
+                throw new ArgumentException("Вещь еще нельзя продать");
+
             item.Status = Status.Redeemed;
             decimal price = item.CalculateCredit();
 
@@ -129,7 +141,7 @@ namespace PDF6
 
             _goods.Remove(item);
 
-            Console.WriteLine($"Предмет выкуплен! Клиент заплатил {price * 2} руб.");
+            Console.WriteLine($"Предмет куплен! Клиент заплатил {price * 2} руб.");
         }
         /// <summary>
         /// Метод, который удаляет предметы, если их выкупили
@@ -138,12 +150,12 @@ namespace PDF6
         {
             if (!_goods.Contains(item))
                 throw new ArgumentException("Нельзя выкупить несуществующий предмет!");
-            if (item.Status == Status.Expired)
+            if (item.IsExpired())
                 throw new ArgumentException("Нельзя выкупить просроченный предмет!");
             item.Status = Status.Redeemed;
 
             decimal loanAmount = item.CalculateCredit();    //Сколько мы заплатили за предмет
-            decimal interest = loanAmount * CommissionRate * item.PeriodOfStorange();     //Сколько накапало процентов
+            decimal interest = loanAmount * CommissionRate * (30 - item.PeriodOfStorange());     //Сколько накапало процентов
             Balance += loanAmount + interest;
 
             _goods.Remove(item);
@@ -151,31 +163,45 @@ namespace PDF6
             Console.WriteLine($"Предмет выкуплен! Клиент заплатил {loanAmount + interest} руб.");
         }
 
+        /// <summary>
+        /// Метод, который выводит предметы определенного статуса
+        /// </summary>
         public void PrintGoodsByStatus(Status status)
         {
+
             Console.WriteLine($"\nПредметы в статусе '{Type.EnumName(status)}'\n");
             foreach (var item in _goods)
             {
+                item.UpdateStatus();
+
                 if (item.Status != status)
                     continue;
                 item.PrintInfo();
             }
         }
 
-        public decimal AddCash(decimal cash)
+        /// <summary>
+        /// Метод, который пополняет баланс ломбарда
+        /// </summary>
+        public decimal AddCash(decimal value)
         {
-            if (cash <= 0)
-                throw new ArgumentException("Сумма пополнения не может быть меньше или равна 0!");
-            Balance += cash;
+            Helper.ThrowException(value);
+            Balance += value;
             Console.WriteLine($"Вы успешно пополнили баланс! Текущий баланс: {Balance}\n");
             return Balance;
         }
 
+        /// <summary>
+        /// Метод, который выводит баланс ломбарда
+        /// </summary>
         public void PrintBalance()
         {
             Console.WriteLine($"\nОстаток на счете: {_balance}\n");
         }
 
+        /// <summary>
+        /// Метод, который печатает информацию про ломбард
+        /// </summary>
         public void PrintPawnshop()
         {
             Console.WriteLine($"Информация о ломбарде\nНазвание: {_name}\nАдрес: {_address}\nНомер телефона: {_phoneNumber}\n");

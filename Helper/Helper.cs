@@ -1,9 +1,8 @@
 ﻿using System;
-using System.ComponentModel.Design;
 
 namespace Bibliotek
 {
-    public class Helper
+    public static class Helper
     {
         /// <summary>
         /// Метод переводит строку в тип decimal
@@ -38,6 +37,9 @@ namespace Bibliotek
             return result;
         }
 
+        /// <summary>
+        /// Метод проверяет строку 
+        /// </summary>
         public static string ReadString(string prompt)
         {
             Console.Write(prompt);
@@ -46,6 +48,12 @@ namespace Bibliotek
             if (string.IsNullOrWhiteSpace(result))
                 throw new ArgumentException("Строка не может быть пустой!");
             return result;
+        }
+
+        public static void ThrowException(decimal value)
+        {
+            if (value <= 0)
+                throw new ArgumentException("Число не может быть отрицательным!");
         }
     }
 }

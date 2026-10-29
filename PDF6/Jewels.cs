@@ -9,12 +9,14 @@ namespace PDF6
         private MetalType _metal;
         private double _weight;
         private int _purity;
-        private List<double> _stone; 
+        private List<double> _stone;
 
-        //Полный конструктор, т.е мы знаем все данные о предмете
+        /// <summary>
+        /// Полный конструктор
+        /// </summary>
         public Jewelry(string name, string nameClient, Status status, MetalType metal, double weight, int purity, List<double> stone)
-        
-            :base(name, nameClient, status)
+
+            : base(name, nameClient, status)
         {
             Metal = metal;
             Weight = weight;
@@ -24,9 +26,11 @@ namespace PDF6
             CalculateCredit();
         }
 
-        //Предмет по усмотрению
+        /// <summary>
+        /// Конструктор, если о предмете ничего не известно
+        /// </summary>
         public Jewelry(string name, double weight)
-            :base(name, "Неизвестный клиент", Status.Expired, DateTime.Now.AddDays(-31))
+            : base(name, "Неизвестный клиент", Status.Expired, DateTime.Now.AddDays(-31))
         {
             Metal = MetalType.Gold;
             Weight = weight;
@@ -74,23 +78,38 @@ namespace PDF6
             {
                 if (value == null)
                     _stone = new List<double>();
-                _stone = value;
+                else
+                    _stone = value;
             }
         }
 
+        /// <summary>
+        /// Метод считает содержание металла в драгоценности
+        /// </summary>
+        public decimal PurityCoefficient()
+        {
+            return _purity / 1000m;
+        }
         /// <summary>
         /// Метод, который считает стоимость камней, если есть
         /// </summary>
         public decimal StonePrice()
         {
-            decimal allPrice = 0;
-
-            foreach (double carat in Stone)
+            if (!HasStone())
             {
-                allPrice += (decimal)carat * 10000m;
+                return 0;
             }
+            else 
+            {
+                decimal allPrice = 0;
 
-            return allPrice;
+                foreach (double carat in Stone)
+                {
+                    allPrice += (decimal)carat * 10000m;
+                }
+
+                return allPrice;
+            }
         }
 
         /// <summary>
@@ -102,27 +121,27 @@ namespace PDF6
 
             switch (_metal)
             {
-                case MetalType.Gold: 
-                    cost = (decimal)_weight*3000; 
+                case MetalType.Gold:
+                    cost = (decimal)_weight * 3000 * PurityCoefficient();
                     break;
                 case MetalType.Silver:
-                    cost = (decimal)_weight * 50;
+                    cost = (decimal)_weight * 50 * PurityCoefficient();
                     break;
                 case MetalType.Platinum:
-                    cost = (decimal)_weight * 4000;
+                    cost = (decimal)_weight * 4000 * PurityCoefficient();
                     break;
                 default:
-                    cost = (decimal)_weight * 100;
+                    cost = (decimal)_weight * 100 * PurityCoefficient();
                     break;
             }
 
             Cost = cost + StonePrice();
 
-            return Cost*0.7m;
+            return Cost * 0.7m;
         }
 
         /// <summary>
-        /// Дополнили метод печати
+        /// Метод печати информации о предмете (драгоценность)
         /// </summary>
         public override void PrintInfo()
         {
@@ -130,5 +149,15 @@ namespace PDF6
             Console.WriteLine($"Тип металла: {Type.EnumName(_metal)}\nПроба: {_purity}\nВес: {_weight}\nСтоимость: {CalculateCredit()}\n");
         }
 
+        /// <summary>
+        /// Метод, который проверяет вещь на наличие камней
+        /// </summary>
+        public bool HasStone()
+        {
+            if (Stone.Count == 0)
+                return false;
+            else
+                return true;
+        }
     }
 }

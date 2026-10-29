@@ -5,6 +5,9 @@ namespace PDF6
 {
     public class Menu
     {
+        /// <summary>
+        /// Метод, который выводит меню пользователя
+        /// </summary>
         public static void User(byte number, Pawnshop pawnshop)
         {
             switch(number)
@@ -37,7 +40,7 @@ namespace PDF6
                         {
                             pawnshop.RedeemItem(foundItem);
                         }
-                        catch(Exception ex) 
+                        catch(ArgumentException ex) 
                         { 
                             Console.WriteLine(ex.Message); 
                         }
@@ -70,13 +73,13 @@ namespace PDF6
                         {
                             pawnshop.BuyItem(goods);
                         }
-                        catch (Exception ex)
+                        catch (ArgumentException ex)
                         {
                             Console.WriteLine(ex.Message) ;
                         }
                     }
                     break;
-                case 3:
+                case 0:
                     return;
                 default: 
                     throw new ArgumentException("Вы выбрали некорректный вариант!");

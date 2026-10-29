@@ -6,7 +6,7 @@ namespace DZ6
     public static class BankHelp
     {
         /// <summary>
-        /// Метод переводит строку в тип TypesOfAccount
+        /// Метод переводит тип TypesOfAccount в строку 
         /// </summary>
         public static string EnumName(TypesOfAccount account)
         {

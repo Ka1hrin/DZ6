@@ -1,6 +1,7 @@
 ﻿using Bibliotek;
 using System;
 using System.Globalization;
+using System.Net.NetworkInformation;
 
 namespace PDF6
 {
@@ -9,11 +10,13 @@ namespace PDF6
         private string _nameOfGoods;        //Название предмета
         private decimal _cost;              //Оценочная стоимость предмета
         private DateTime _dateOfSub;        //Дата сдачи предмета
-        private int _periodOfStorange;      //Количество дней в залоге
+        private int _periodOfStorange;      //Количество дней до окончания залога
         private Status _status;             //Состояние на момент сдачи
         private string _nameClient;         //фИО человека, сдавшего предмет
 
-        //Создаю конструктор, который смогут вызывать наследники
+        /// <summary>
+        /// Конструктор, если предмет сдали сегодня
+        /// </summary>
         protected Goods(string name, string nameClient, Status status) 
         {
             NameOfGoods = name;
@@ -23,7 +26,9 @@ namespace PDF6
             NameClient = nameClient;
         }
 
-        //Конструктор, в котором можно ввести дату продажи
+        /// <summary>
+        /// Конструктор, если предмет сдали не сегодня
+        /// </summary>
         protected Goods(string name, string nameClient, Status status, DateTime dateOfSub)
         {
             NameOfGoods = name;
@@ -31,44 +36,6 @@ namespace PDF6
             _periodOfStorange = PeriodOfStorange();
             Status = status;
             NameClient = nameClient;
-        }
-
-        /// <summary>
-        /// Метод, который рассчитывает количество дней в залоге
-        /// </summary>
-        public int PeriodOfStorange()
-        {
-            TimeSpan periodOfStorange = DateTime.Now - _dateOfSub;
-            if (30 - periodOfStorange.Days < 0)
-                return 0;
-            return 30 - periodOfStorange.Days;
-        }
-
-        /// <summary>
-        /// Метод, который проверяет срок хранения
-        /// </summary>
-        public void ExpiryDate()
-        {
-            DateTime expiryDate = _dateOfSub.AddDays(30);
-
-            if (DateTime.Now > expiryDate)
-                Console.WriteLine("Срок хранения истек!");
-            
-            Console.WriteLine($"Осталось дней для выкупа: {PeriodOfStorange()}");
-        }
-
-        /// <summary>
-        /// Метод рассчитывает, сколько получит клиент
-        /// </summary>
-        public abstract decimal CalculateCredit();      
-
-        /// <summary>
-        /// Метод, который выводит информацию о предмете 
-        /// </summary>
-        public virtual void PrintInfo()
-        {
-            Console.WriteLine($"Информация о предмете\nНазвание предмета: {_nameOfGoods}\nКто сдал предмет: {_nameClient}\n" +
-                $"Оставшееся время для выкупа: {PeriodOfStorange()} дней\nСтатус: {Type.EnumName(_status)}");
         }
 
         public string NameOfGoods
@@ -88,7 +55,7 @@ namespace PDF6
             set
             {
                 //Enum.IsDefined() - есть ли в перечислении, typeof(...) - в каком перечислении, value - что именно
-                if (!Enum.IsDefined(typeof(Status), value)) 
+                if (!Enum.IsDefined(typeof(Status), value))
                     throw new ArgumentException("Недопустимый статус предмета!");
                 _status = value;
             }
@@ -110,8 +77,7 @@ namespace PDF6
             get { return _cost; }
             set
             {
-                if (value < 0)
-                    throw new ArgumentException("Стоимость не может быть отрицательной!");
+                Helper.ThrowException(value);
                 _cost = value;
             }
         }
@@ -125,6 +91,57 @@ namespace PDF6
                     throw new ArgumentException("Дата сдачи не может быть в будущем!");
 
                 _dateOfSub = value;
+            }
+        }
+
+        /// <summary>
+        /// Метод, который рассчитывает, сколько дней осталось до окончания залогового времени
+        /// </summary>
+        public int PeriodOfStorange()
+        {
+            TimeSpan periodOfStorange = DateTime.Now - _dateOfSub;
+            if (30 - periodOfStorange.Days < 0)
+                return 0;
+            return 30 - periodOfStorange.Days;
+        }
+
+        /// <summary>
+        /// Метод рассчитывает, сколько получит клиент (заполняют наследники)
+        /// </summary>
+        public abstract decimal CalculateCredit();      
+
+        /// <summary>
+        /// Метод, который выводит информацию о предмете 
+        /// </summary>
+        public virtual void PrintInfo()
+        {
+            Console.WriteLine($"Информация о предмете\nНазвание предмета: {_nameOfGoods}\nКто сдал предмет: {_nameClient}\n" +
+                $"Оставшееся время для выкупа: {PeriodOfStorange()} дней\nСтатус: {Type.EnumName(_status)}");
+        }
+
+        /// <summary>
+        /// Метод, который проверяет, закончился ли срок залога
+        /// </summary>
+        public bool IsExpired()
+        {
+            if (PeriodOfStorange() == 0)
+                return true;
+            else
+                return false;
+        }
+
+        /// <summary>
+        /// Метод, который меняет статус, если предмет просрочился
+        /// </summary>
+        public void UpdateStatus()
+        {
+            if (_status == Status.Redeemed || _status == Status.Expired)
+                return;
+
+            if (IsExpired())
+            {
+                _status = Status.Expired;
+                Console.WriteLine($"Срок хранения предмета '{_nameOfGoods}' истек!");
             }
         }
     }

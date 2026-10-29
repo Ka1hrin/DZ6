@@ -6,7 +6,7 @@ namespace PDF6
     public class Type
     {
         /// <summary>
-        /// Метод переводит строку в тип Condition
+        /// Метод переводит тип Condition строку 
         /// </summary>
         public static string EnumName(Condition condition)
         {
@@ -20,7 +20,7 @@ namespace PDF6
         }
 
         /// <summary>
-        /// Метод переводит строку в тип MetalType
+        /// Метод переводит тип MetalType в строку 
         /// </summary>
         public static string EnumName(MetalType metalType)
         {
@@ -33,7 +33,7 @@ namespace PDF6
         }
 
         /// <summary>
-        /// Метод переводит строку в тип Status
+        /// Метод переводит тип Status в строку 
         /// </summary>
         public static string EnumName(Status status)
         {

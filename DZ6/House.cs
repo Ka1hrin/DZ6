@@ -11,7 +11,7 @@
         
         public House(int height, byte floors, int flats, byte entrances)
         {
-            _buildNumber = ++_houseNumber;
+            _buildNumber = BuildNumber();
 
             Height = height;
             Floors = floors;
@@ -64,7 +64,14 @@
         }
 
         /// <summary>
-        /// Выводит информацию 
+        /// Метод, который считает уникальный номер дома
+        /// </summary>
+        public static int BuildNumber()
+        {
+            return ++_houseNumber;
+        }
+        /// <summary>
+        /// Выводит информацию о здании
         /// </summary>
         public void PrintInfo()
         {
@@ -73,7 +80,7 @@
         }
 
         /// <summary>
-        /// Вычисляет высоту одного этажа.
+        /// Вычисляет высоту одного этажа
         /// </summary>
         public double FloorHeight()
         {
@@ -82,7 +89,7 @@
         }
 
         /// <summary>
-        /// Вычисляет среднее количество квартир в одном подъезде.
+        /// Вычисляет среднее количество квартир в одном подъезде
         /// </summary>
         public double FlatInEntrancesCount()
         {
@@ -90,7 +97,7 @@
         }
 
         /// <summary>
-        /// Вычисляет среднее количество квартир на одном этаже.
+        /// Вычисляет среднее количество квартир на одном этажеы
         /// </summary>
         public double FlatInFloorCount()
         {

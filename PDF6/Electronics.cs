@@ -11,6 +11,9 @@ namespace PDF6
         private Condition _condition;
         private bool HasBox {  get; set; }
 
+        /// <summary>
+        /// Полный конструктор (вводится если сдали в залог сегодня)
+        /// </summary>
         public Electronics(string name, string clientName, Status status, string model, int manufactureYear, decimal marketPrice, Condition condition, bool hasBox)
             :base (name, clientName, status)
         {
@@ -21,6 +24,9 @@ namespace PDF6
             HasBox = hasBox;
         }
 
+        /// <summary>
+        /// Полный конструктор (если предмет сдали не сегодня)
+        /// </summary>
         public Electronics(string name, string clientName, Status status, DateTime dateOfSub, string model, int manufactureYear, decimal marketPrice, Condition condition)
             :base(name, clientName, status, dateOfSub)
         {
@@ -30,12 +36,15 @@ namespace PDF6
             Condition = condition;
         }
 
+        /// <summary>
+        /// Конструктор, если про предмет ничего не известно
+        /// </summary>
         public Electronics(string name, string model)
             : base (name, "Неизвестный клиент", Status.Expired, DateTime.Now.AddDays(-31))
         {
             Model = model;
             ManufactureYear = 2000;
-            MarketPrice = 0;
+            MarketPrice = 1000;
             Condition = Condition.Fair;
             HasBox = false;
         }
@@ -45,7 +54,7 @@ namespace PDF6
             set
             {
                 if (string.IsNullOrWhiteSpace(value))
-                    throw new ArgumentNullException("Поле не может быть пустым!");
+                    throw new ArgumentException("Поле не может быть пустым!");
                 _model = value;
             }
         }
@@ -66,8 +75,7 @@ namespace PDF6
             get { return _marketPrice; }
             set
             {
-                if (value < 0)
-                    throw new ArgumentException("Цена не может быть отрицательной!");
+                Helper.ThrowException(value);
                 _marketPrice = value;
             }
         }
@@ -115,6 +123,9 @@ namespace PDF6
             return 1;
         }
 
+        /// <summary>
+        /// Метод, который считает сумму, необходимую выдать в залог
+        /// </summary>
         public override decimal CalculateCredit()
         {
             decimal prozent = 1;
@@ -126,10 +137,24 @@ namespace PDF6
             return Cost;
         }
 
+        /// <summary>
+        /// Метод, который печатает информацию о предмете (техника)
+        /// </summary>
         public override void PrintInfo()
         {
             base.PrintInfo();
             Console.WriteLine($"Модель: {_model}\nСостояние: {Type.EnumName(_condition)}\nЗалоговая стоимость: {CalculateCredit()}\n");
+        }
+
+        /// <summary>
+        /// Метод, проверяющий сломана ли техника
+        /// </summary>
+        public bool IsBroken()
+        {
+            if (_condition == Condition.Broken)
+                return true;
+            else
+                return false;
         }
     }
 }

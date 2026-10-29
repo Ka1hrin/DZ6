@@ -7,30 +7,36 @@ namespace DZ6
     {
         private static void Main()
         {
-            Task();
-            Homework();
+            try { Task(); }
+            catch (ArgumentException ex)
+            {
+                Console.WriteLine(ex.Message);
+            }
+            try { Homework();}
+            catch (ArgumentException ex)
+            {
+                Console.WriteLine(ex.Message);
+            }
+            
         }
         private static void Task()
         {
             Console.WriteLine("Упражнение 7");
 
             decimal value = Helper.ReadDecimal("Введите баланс: ");
-            Console.Write("Введите тип счета:");
+            Console.Write("Введите тип счета (Current, Savings): ");
             string typesOfAccount = Console.ReadLine();
-            if(string.IsNullOrWhiteSpace(typesOfAccount))
-                throw new ArgumentException("Строка не может быть пустой!");
-            if (!Enum.TryParse(typesOfAccount, true, out TypesOfAccount type))
-                throw new ArgumentException("Вы ввели некорректный тип счета!");
-
+            if(string.IsNullOrWhiteSpace(typesOfAccount) || !Enum.TryParse(typesOfAccount, true, out TypesOfAccount type))
+                throw new ArgumentException("Некорректный ввод!");
 
             BankAccount account = new BankAccount(value, type);
             account.PrintInfo();
 
-            int deposit = Helper.ReadInt("Введите сумму пополнения: ");
+            decimal deposit = Helper.ReadDecimal("Введите сумму пополнения: ");
             account.Deposit(deposit);
             account.PrintInfo();
 
-            int withdraw = Helper.ReadInt("Введите сумму, которую хотите снять: ");
+            decimal withdraw = Helper.ReadDecimal("Введите сумму, которую хотите снять: ");
             account.Withdraw(withdraw);
             account.PrintInfo();
 
